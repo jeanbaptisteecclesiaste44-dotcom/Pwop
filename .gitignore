@@ -1,0 +1,22 @@
+# .gitignore
+
+# Node
+/node_modules
+/dist
+/build
+
+# Flutter
+**/ios/Flutter/App.framework
+**/ios/Flutter/Flutter.framework
+**/ios/Flutter/Flutter.podspec
+.flutter-plugins
+.flutter-plugins-dependencies
+.packages
+.pub-cache
+.pub
+.idea/
+.vscode/
+
+# env
+.env
+
