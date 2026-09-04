@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="ht">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#0b6b3a">
+  <title>PWOP — Jesyon Ranmasaj Fatra</title>
+  <style>
+    *{box-sizing:border-box}
+    body{margin:0;font-family:Arial,Helvetica,sans-serif;background:#f4f7f5;color:#17231d}
+    header{background:#0b6b3a;color:white;padding:18px 16px;position:sticky;top:0;z-index:5}
+    header h1{margin:0;font-size:25px}
+    header p{margin:5px 0 0;opacity:.9}
+    nav{display:flex;gap:8px;overflow:auto;background:white;padding:10px;position:sticky;top:82px;z-index:4;border-bottom:1px solid #ddd}
+    nav button{border:0;background:#e8f2ec;padding:10px 13px;border-radius:20px;white-space:nowrap;font-weight:bold;color:#0b6b3a}
+    nav button.active{background:#0b6b3a;color:white}
+    main{max-width:1100px;margin:auto;padding:16px}
+    section{display:none}.active-section{display:block}
+    .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:12px}
+    .card{background:white;border-radius:14px;padding:16px;box-shadow:0 2px 10px #00000010}
+    .metric{font-size:28px;font-weight:800;color:#0b6b3a;margin-top:8px}
+    h2{margin-top:8px}
+    label{display:block;font-weight:bold;margin:10px 0 5px}
+    input,select,textarea{width:100%;padding:11px;border:1px solid #ccd6d0;border-radius:9px;font-size:15px}
+    textarea{min-height:90px;resize:vertical}
+    .btn{border:0;border-radius:9px;padding:11px 15px;font-weight:bold;cursor:pointer;margin-top:12px}
+    .primary{background:#0b6b3a;color:white}.secondary{background:#e8f2ec;color:#0b6b3a}
+    table{width:100%;border-collapse:collapse;margin-top:14px;background:white}
+    th,td{padding:10px;border-bottom:1px solid #e6ebe8;text-align:left;font-size:14px}
+    th{background:#eef5f0}
+    .notice{padding:12px;border-radius:10px;background:#fff7df;margin:12px 0}
+    .empty{color:#65736b;text-align:center;padding:20px}
+    footer{text-align:center;padding:25px;color:#65736b}
+    @media(max-width:600px){main{padding:10px}.grid{grid-template-columns:1fr 1fr}.metric{font-size:23px}th,td{padding:8px 5px;font-size:12px}}
+  </style>
+</head>
+<body>
+<header>
+  <h1>PWOP</h1>
+  <p>Pwòpte kòmanse lakay ou • Jesyon sèvis ranmasaj fatra</p>
+</header>
+
+<nav>
+  <button class="tab active" data-target="dashboard">Dashboard</button>
+  <button class="tab" data-target="clients">Kliyan</button>
+  <button class="tab" data-target="collectes">Ranmasaj</button>
+  <button class="tab" data-target="payments">Peman</button>
+  <button class="tab" data-target="expenses">Depans</button>
+  <button class="tab" data-target="reports">Rapò</button>
+</nav>
+
+<main>
+  <section id="dashboard" class="active-section">
+    <h2>Dashboard PWOP</h2>
+    <div class="grid">
+      <div class="card">Kliyan aktif<div class="metric" id="mClients">0</div></div>
+      <div class="card">Kliyan ki dwe<div class="metric" id="mDebtors">0</div></div>
+      <div class="card">Peman jodi a<div class="metric" id="mTodayPay">0 G</div></div>
+      <div class="card">Depans jodi a<div class="metric" id="mTodayExp">0 G</div></div>
+      <div class="card">Ranmasaj fèt<div class="metric" id="mDone">0</div></div>
+      <div class="card">Ranmasaj rete<div class="metric" id="mPending">0</div></div>
+      <div class="card">Benefis mwa a<div class="metric" id="mProfit">0 G</div></div>
+    </div>
+    <div class="notice">Premye vèsyon PWOP la estoke done yo sou telefòn/navigatè a. Pou yon sistèm ki sèvi ak plizyè anplwaye, bazdone ak koneksyon entènèt, n ap ajoute backend nan pwochen vèsyon an.</div>
+  </section>
+
+  <section id="clients">
+    <h2>Enskri yon kliyan</h2>
+    <div class="card">
+      <label>Non konplè</label><input id="cName" placeholder="Non kliyan an">
+      <label>Telefòn / WhatsApp</label><input id="cPhone" placeholder="+509...">
+      <label>Adrès</label><input id="cAddress" placeholder="Adrès kliyan an">
+      <label>Kalite kliyan</label>
+      <select id="cType"><option>Kay</option><option>Magazen</option><option>Restoran</option><option>Biwo</option><option>Otèl</option><option>Lòt</option></select>
+      <label>Pri sèvis (Gdes)</label><input id="cPrice" type="number" min="0" placeholder="0">
+      <button class="btn primary" onclick="addClient()">+ Anrejistre kliyan</button>
+    </div>
+    <div class="card"><h3>Lis kliyan</h3><div id="clientList"></div></div>
+  </section>
+
+  <section id="collectes">
+    <h2>Nouvo ranmasaj</h2>
+    <div class="card">
+      <label>Kliyan</label><select id="rClient"></select>
+      <label>Dat</label><input id="rDate" type="date">
+      <label>Estati</label><select id="rStatus"><option>Pwograme</option><option>Fèt</option><option>Anile</option></select>
+      <label>Nòt</label><textarea id="rNote" placeholder="Enstriksyon oswa detay..."></textarea>
+      <button class="btn primary" onclick="addCollection()">+ Anrejistre ranmasaj</button>
+    </div>
+    <div class="card"><h3>Ranmasaj yo</h3><div id="collectionList"></div></div>
+  </section>
+
+  <section id="payments">
+    <h2>Anrejistre peman</h2>
+    <div class="card">
+      <label>Kliyan</label><select id="pClient"></select>
+      <label>Kantite (Gdes)</label><input id="pAmount" type="number" min="0" placeholder="0">
+      <label>Dat</label><input id="pDate" type="date">
+      <label>Metòd</label><select id="pMethod"><option>Lajan kach</option><option>Transfè</option><option>Mobile Money</option><option>Lòt</option></select>
+      <button class="btn primary" onclick="addPayment()">+ Anrejistre peman</button>
+    </div>
+    <div class="card"><h3>Peman yo</h3><div id="paymentList"></div></div>
+  </section>
+
+  <section id="expenses">
+    <h2>Anrejistre depans</h2>
+    <div class="card">
+      <label>Deskripsyon</label><input id="eDesc" placeholder="Gaz, reparasyon, salè...">
+      <label>Kantite (Gdes)</label><input id="eAmount" type="number" min="0" placeholder="0">
+      <label>Dat</label><input id="eDate" type="date">
+      <button class="btn primary" onclick="addExpense()">+ Anrejistre depans</button>
+    </div>
+    <div class="card"><h3>Depans yo</h3><div id="expenseList"></div></div>
+  </section>
+
+  <section id="reports">
+    <h2>Rapò PWOP</h2>
+    <div class="grid">
+      <div class="card">Total peman<div class="metric" id="totalPay">0 G</div></div>
+      <div class="card">Total depans<div class="metric" id="totalExp">0 G</div></div>
+      <div class="card">Benefis<div class="metric" id="totalProfit">0 G</div></div>
+    </div>
+    <div class="card">
+      <button class="btn secondary" onclick="exportData()">Telechaje done PWOP (JSON)</button>
+      <button class="btn secondary" onclick="clearData()">Efase tout done</button>
+    </div>
+  </section>
+</main>
+
+<footer>PWOP — Pwòpte kòmanse lakay ou.</footer>
+
+<script>
+const key="pwop_v1_data";
+let data=JSON.parse(localStorage.getItem(key)||'{"clients":[],"collections":[],"payments":[],"expenses":[]}');
+
+function save(){localStorage.setItem(key,JSON.stringify(data)); render();}
+function money(n){return Number(n||0).toLocaleString('fr-FR')+" G";}
+function today(){return new Date().toISOString().slice(0,10);}
+function esc(s){return String(s??"").replace(/[&<>"']/g,m=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;"}[m]));}
+
+document.querySelectorAll(".tab").forEach(b=>b.onclick=()=>{
+  document.querySelectorAll(".tab").forEach(x=>x.classList.remove("active"));
+  document.querySelectorAll("main section").forEach(x=>x.classList.remove("active-section"));
+  b.classList.add("active"); document.getElementById(b.dataset.target).classList.add("active-section");
+});
+
+function addClient(){
+  const name=cName.value.trim(); if(!name){alert("Tanpri mete non kliyan an.");return;}
+  data.clients.push({id:Date.now(),name,phone:cPhone.value,address:cAddress.value,type:cType.value,price:Number(cPrice.value||0),active:true});
+  cName.value=cPhone.value=cAddress.value=cPrice.value=""; save();
+}
+function addCollection(){
+  if(!rClient.value){alert("Chwazi yon kliyan.");return;}
+  data.collections.push({id:Date.now(),clientId:Number(rClient.value),date:rDate.value||today(),status:rStatus.value,note:rNote.value});
+  rNote.value=""; save();
+}
+function addPayment(){
+  if(!pClient.value){alert("Chwazi yon kliyan.");return;}
+  const amount=Number(pAmount.value||0); if(amount<=0){alert("Mete yon kantite ki valab.");return;}
+  data.payments.push({id:Date.now(),clientId:Number(pClient.value),amount,date:pDate.value||today(),method:pMethod.value}); pAmount.value=""; save();
+}
+function addExpense(){
+  const desc=eDesc.value.trim(), amount=Number(eAmount.value||0); if(!desc||amount<=0){alert("Mete deskripsyon ak kantite depans lan.");return;}
+  data.expenses.push({id:Date.now(),desc,amount,date:eDate.value||today()}); eDesc.value=eAmount.value=""; save();
+}
+function clientName(id){const c=data.clients.find(x=>x.id===Number(id));return c?c.name:"Kliyan efase";}
+function render(){
+  mClients.textContent=data.clients.filter(x=>x.active).length;
+  const paidIds=new Set(data.payments.map(p=>p.clientId));
+  mDebtors.textContent=data.clients.filter(c=>c.active&&!paidIds.has(c.id)).length;
+  mTodayPay.textContent=money(data.payments.filter(x=>x.date===today()).reduce((a,b)=>a+b.amount,0));
+  mTodayExp.textContent=money(data.expenses.filter(x=>x.date===today()).reduce((a,b)=>a+b.amount,0));
+  mDone.textContent=data.collections.filter(x=>x.status==="Fèt").length;
+  mPending.textContent=data.collections.filter(x=>x.status==="Pwograme").length;
+  const tp=data.payments.reduce((a,b)=>a+b.amount,0), te=data.expenses.reduce((a,b)=>a+b.amount,0);
+  mProfit.textContent=money(tp-te); totalPay.textContent=money(tp); totalExp.textContent=money(te); totalProfit.textContent=money(tp-te);
+
+  rClient.innerHTML=pClient.innerHTML=data.clients.map(c=>`<option value="${c.id}">${esc(c.name)}</option>`).join("")||'<option value="">Pa gen kliyan</option>';
+
+  clientList.innerHTML=data.clients.length?`<table><tr><th>Non</th><th>Telefòn</th><th>Kalite</th><th>Pri</th></tr>${data.clients.map(c=>`<tr><td>${esc(c.name)}</td><td>${esc(c.phone)}</td><td>${esc(c.type)}</td><td>${money(c.price)}</td></tr>`).join("")}</table>`:'<div class="empty">Pa gen kliyan ankò.</div>';
+  collectionList.innerHTML=data.collections.length?`<table><tr><th>Kliyan</th><th>Dat</th><th>Estati</th><th>Nòt</th></tr>${data.collections.map(x=>`<tr><td>${esc(clientName(x.clientId))}</td><td>${x.date}</td><td>${esc(x.status)}</td><td>${esc(x.note)}</td></tr>`).join("")}</table>`:'<div class="empty">Pa gen ranmasaj ankò.</div>';
+  paymentList.innerHTML=data.payments.length?`<table><tr><th>Kliyan</th><th>Dat</th><th>Kantite</th><th>Metòd</th></tr>${data.payments.map(x=>`<tr><td>${esc(clientName(x.clientId))}</td><td>${x.date}</td><td>${money(x.amount)}</td><td>${esc(x.method)}</td></tr>`).join("")}</table>`:'<div class="empty">Pa gen peman ankò.</div>';
+  expenseList.innerHTML=data.expenses.length?`<table><tr><th>Deskripsyon</th><th>Dat</th><th>Kantite</th></tr>${data.expenses.map(x=>`<tr><td>${esc(x.desc)}</td><td>${x.date}</td><td>${money(x.amount)}</td></tr>`).join("")}</table>`:'<div class="empty">Pa gen depans ankò.</div>';
+}
+function exportData(){
+  const blob=new Blob([JSON.stringify(data,null,2)],{type:"application/json"});
+  const a=document.createElement("a");a.href=URL.createObjectURL(blob);a.download="PWOP_donnees_v1.json";a.click();URL.revokeObjectURL(a.href);
+}
+function clearData(){
+  if(confirm("Èske ou sèten ou vle efase tout done PWOP yo sou aparèy sa a?")){
+    data={clients:[],collections:[],payments:[],expenses:[]};save();
+  }
+}
+rDate.value=today();pDate.value=today();eDate.value=today();render();
+</script>
+</body>
+</html>
